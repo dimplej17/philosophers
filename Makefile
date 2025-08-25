@@ -1,5 +1,3 @@
-// include  42 header or no?
-
 NAME = philo
 
 SRCS = main.c \
@@ -8,7 +6,7 @@ SRCS = main.c \
 
 OBJS = $(SRCS:%.c=%.o)
 
-all = $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJS)
 	cc -o $(NAME) $(OBJS) -pthread

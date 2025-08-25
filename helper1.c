@@ -4,12 +4,12 @@
 
 void valid_input(void)
 {
-    printf("valid input: number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]"); // cross check if this is the write way to display it
+    printf("valid input: number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n"); // cross check if this is the write way to display it
 }
 
 int arg_time_check(long n)
 {
-    if (n > INT_MAX || n <= 0)
+    if (n > INT_MAX || n < 60)
         return (1);
     return (0);
 }
