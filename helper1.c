@@ -62,3 +62,16 @@ int	check_arg_if_int(char *str)
 	return (0);
 }
 
+void *routine(void *data)
+{
+	struct timeval current_time;
+	gettimeofday(&current_time, NULL);
+	long ms;
+	ms = tv.tv_sec * 1000L + tv.tv_usec / 1000L;
+	printf("%ld %ld has taken a fork\n", ms, input->philo->id);
+ 	printf("%ld %ld is eating\n", ms, input->philo->id);
+ 	printf("%ld %ld is sleeping\n", ms, input->philo->id);
+ 	printf("%ld %ld is thinking\n", ms, input->philo->id);
+ 	printf("%ld %ld died\n", ms, input->philo->id);
+	
+}

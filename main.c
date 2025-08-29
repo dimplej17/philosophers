@@ -1,11 +1,6 @@
 // add 42 header
 
 // for input error handling, intmax or longmax? time stuff has to be > 0, yeah? otherwise philos die instantly? 
-// arguments: number_of_philosophers time_to_die time_to_eat
-// time_to_sleep [number_of_times_each_philosopher_must_eat]
-// should i also handle input given within quotes or nah?
-
-// include  42 header for Makefile or no?
 
 // gcc -fsanitize=thread -g threads.c && ./a.out - add in makefile - to check something?? i forgot
 
@@ -13,9 +8,9 @@
 
 int main(int argc, char *argv[])
 {
-    t_data input;
+    t_input input;
 	int count;
-	count = 0;
+	count = 1;
     if (argc != 5 && argc != 6)
         return (valid_input(), 1);
     if (check_arg_if_int(argv[1]) == 1 || check_arg_if_int(argv[2]) == 1 || check_arg_if_int(argv[3]) == 1 || check_arg_if_int(argv[4]) == 1)
@@ -42,17 +37,28 @@ int main(int argc, char *argv[])
     }
     else
     	input.must_eat = -1;
-    input->philos = malloc(sizeof(t_philo) * input->n_philo);
-	while (count < data->n_philo - 1)
+    input->philo = malloc(sizeof(t_philo) * input->n_philo);
+	while (count < input->n_philo - 1) // what if n_philo = 1?
 	{
-		data->philos[count].id = count;
-		data->philos[count].left_fork = count;
-		data->philos[count].right_fork = count + 1;
+		input->philo[count].id = count;
+		input->philo[count].left_fork = count;
+		input->philo[count].right_fork = count + 1;
 		count++;
 	}
-	data->philos[count].id = count;
-	data->philos[count].left_fork = count;
-	data->philos[count].right_fork = 0;
+	input->philo[count].id = count;
+	input->philo[count].left_fork = count;
+	input->philo[count].right_fork = 0;
+    // each philo must have a thread of their own
+    pthread_t t_id1;
+    if (pthread_create(&t_id1, NULL, routine, &input) != 0)
+        {
+            free(input->philo);
+            return (1);
+        }
+
+
+
+    free(input->philo);
     return (0);
 
 
