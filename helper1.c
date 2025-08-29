@@ -70,8 +70,10 @@ void *routine(void *data)
 	ms = tv.tv_sec * 1000L + tv.tv_usec / 1000L;
 	printf("%ld %ld has taken a fork\n", ms, input->philo->id);
  	printf("%ld %ld is eating\n", ms, input->philo->id);
+	usleep(input.time_to_eat * 1000);
  	printf("%ld %ld is sleeping\n", ms, input->philo->id);
- 	printf("%ld %ld is thinking\n", ms, input->philo->id);
+ 	usleep(input.time_to_sleep * 1000);
+	printf("%ld %ld is thinking\n", ms, input->philo->id);
  	printf("%ld %ld died\n", ms, input->philo->id);
 	
 }

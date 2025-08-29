@@ -16,6 +16,7 @@ typedef struct s_philo
     int right_fork;
 	long last_meal_eaten;
     int     stop; // flag: someone died or all ate enough
+	struct s_data *data;
 }	t_philo;
 
 typedef struct s_data
@@ -26,7 +27,7 @@ typedef struct s_data
     long     time_to_sleep;
     long     must_eat;        // -1 if not provided
     long    start_time;      // when simulation began
-    t_philo philo;
+    t_philo *philo;
 }   t_data;
 
 // helpers
@@ -34,6 +35,7 @@ void valid_input(void);
 int arg_time_check(long n);
 long	ft_atol(char *str);
 int	check_arg_if_int(char *str);
+void *routine(void *data);
 
 
 
