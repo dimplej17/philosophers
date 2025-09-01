@@ -62,18 +62,51 @@ int	check_arg_if_int(char *str)
 	return (0);
 }
 
-void *routine(void *data)
+long get_current_time(void)
 {
+	long ms;
 	struct timeval current_time;
 	gettimeofday(&current_time, NULL);
+	ms = current_time.tv_sec * 1000L + current_time.tv_usec / 1000L;
+	return (ms);
+}
+
+void *routine(void *data)
+{
+	
 	long ms;
-	ms = tv.tv_sec * 1000L + tv.tv_usec / 1000L;
+	ms = get_current_time();
+	int i;
+	i = 1;
+	while (threads[i])
+	{
+	if (ms > input.time_to_die)
+	{printf("%ld %ld died\n", ms, input->philo->id);
+	return ;}
+	if ((ms - input->philo[i].last_meal_eaten) > input.time_to_die)
+	{printf("%ld %ld died\n", ms, input->philo->id); 
+	return ;}
+	ms = get_current_time();
 	printf("%ld %ld has taken a fork\n", ms, input->philo->id);
- 	printf("%ld %ld is eating\n", ms, input->philo->id);
+ 	// lock mutex? - left fork?
+	ms = get_current_time();
+	printf("%ld %ld has taken a fork\n", ms, input->philo->id);
+	// lock mutex? - right fork?
+	ms = get_current_time();
+	printf("%ld %ld is eating\n", ms, input->philo->id);
 	usleep(input.time_to_eat * 1000);
- 	printf("%ld %ld is sleeping\n", ms, input->philo->id);
+	input->philo[i].last_meal_eaten = get_current_time();
+ 	ms = get_current_time();
+	printf("%ld %ld is sleeping\n", ms, input->philo->id);
  	usleep(input.time_to_sleep * 1000);
+	ms = get_current_time();
 	printf("%ld %ld is thinking\n", ms, input->philo->id);
- 	printf("%ld %ld died\n", ms, input->philo->id);
+	i++;
+	}
+ 	
+	
 	
 }
+
+// simulation stopping - when a philo dies or when all philos have eaten must_eat number of times.
+// when does a philo die? - 

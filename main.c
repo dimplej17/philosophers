@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     t_data input;
 	int i;
 	i = 1;
+    input.start_time = get_current_time();
     if (argc != 5 && argc != 6)
         return (valid_input(), 1);
     if (check_arg_if_int(argv[1]) == 1 || check_arg_if_int(argv[2]) == 1 || check_arg_if_int(argv[3]) == 1 || check_arg_if_int(argv[4]) == 1)
@@ -38,7 +39,11 @@ int main(int argc, char *argv[])
     else
     	input.must_eat = -1;
     input->philo = malloc(sizeof(t_philo) * input->n_philo);
-	while (i < input.n_philo) // what if n_philo = 1?
+    if (input->n_philo == 1)
+    {
+        // a function just to handle this (?)
+    }
+	while (i < input.n_philo)
 	{
 		input->philo[i].id = i;
 		input->philo[i].left_fork = i - 1;
