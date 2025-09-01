@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     t_data input;
 	int i;
-	i = 1;
+	i = 0;
     input.start_time = get_current_time();
     if (argc != 5 && argc != 6)
         return (valid_input(), 1);
@@ -38,42 +38,55 @@ int main(int argc, char *argv[])
     }
     else
     	input.must_eat = -1;
-    input->philo = malloc(sizeof(t_philo) * input->n_philo);
-    if (input->n_philo == 1)
-    {
-        // a function just to handle this (?)
-    }
+    input.philo = malloc(sizeof(t_philo) * input.n_philo);
+    if (input.n_philo == 1)
+	{
+		one_philo(input);
+		free(input.philo);
+    	return (0);
+	}
+	while (i < input.n_philo - 1)
+	{
+		input.philo[i].id = i + 1;
+		input.philo[i].left_fork = i;
+		input.philo[i].right_fork = i + 1;
+		input.philo[i].last_meal_eaten = input.start_time;
+		i++;
+	}
+	input.philo[i].id = i + 1;
+	input.philo[i].left_fork = i;
+	input.philo[i].right_fork = 0;
+    input.philo[i].data = &input;
+	pthread_t threads[input.n_philo];
+	i = 0;
 	while (i < input.n_philo)
 	{
-		input->philo[i].id = i;
-		input->philo[i].left_fork = i - 1;
-		input->philo[i].right_fork = i;
+		if (pthread_create(&threads[i], NULL, routine, &input.philo[i]) != 0)
+			return (free(input.philo), 1);
 		i++;
 	}
-	input->philo[i].id = i;
-	input->philo[i].left_fork = i - 1;
-	input->philo[i].right_fork = 0;
-    input.philo[i].data = &input;
-    pthread_t t_id1;
-    if (pthread_create(&t_id1, NULL, routine, &input) != 0)
-        return (free(input->philo), 1);
-    pthread_t t_id2;
-    if (pthread_create(&t_id2, NULL, routine, &input) != 0)
-		return (1, free(input->philo));
-	pthread_t threads[input.n_philo];
-	i = 1;
-	while (i < input.n_philo + 1)
+	i = 0;
+	while (i < input.n_philo)
 	{
-		pthread_create(&threads[i], NULL, routine, &input.philo[i]);
+		if (pthread_join(threads[i], NULL) != 0)
+			return (free(input.philo), 1);
 		i++;
 	}
-	while (i < input.n_philo + 1)
+	input.mutex_fork = malloc(sizeof(pthread_mutex_t) * input.n_philo);
+	i = 0;
+	while (i < input.n_philo)
 	{
-		pthread_join(threads[i], NULL);		
+		if (pthread_mutex_init(&input.mutex_fork[i], NULL) != 0)
+			return (free(input.philo), 1);
 		i++;
 	}
-    free(input->philo);
+	i = 0;
+	while (i < input.n_philo)
+	{
+		if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
+			return (free(input.philo), 1);
+		i++;
+	}
+	free(input.philo);
     return (0);
-
-
 }
