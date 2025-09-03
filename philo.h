@@ -32,13 +32,17 @@ typedef struct s_data
     t_philo *philo;
 }   t_data;
 
-// helpers
+// helper1
 void valid_input(void);
 int arg_time_check(long n);
 long	ft_atol(char *str);
 int	check_arg_if_int(char *str);
 long get_absolute_time(void);
+
+// helper2
 long get_current_time(t_data *data);
+
+// routines
 void one_philo(t_data input);
 void *routine_one_philo(void *data);
 void *routine(void *data);
