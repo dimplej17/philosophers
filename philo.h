@@ -27,7 +27,7 @@ typedef struct s_data
     long     time_to_eat;
     long     time_to_sleep;
     long     must_eat;        // -1 if not provided
-    long long    start_time;      // when simulation began
+    long    start_time;      // when simulation began
     pthread_mutex_t *mutex_fork;
     t_philo *philo;
 }   t_data;
@@ -37,8 +37,8 @@ void valid_input(void);
 int arg_time_check(long n);
 long	ft_atol(char *str);
 int	check_arg_if_int(char *str);
-long long get_absolute_time(void);
-long long get_current_time(t_data *data);
+long get_absolute_time(void);
+long get_current_time(t_data *data);
 void one_philo(t_data input);
 void *routine_one_philo(void *data);
 void *routine(void *data);
