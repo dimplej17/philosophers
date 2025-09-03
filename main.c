@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     t_data input;
 	int i;
 	i = 0;
-    input.start_time = get_current_time();
+    input.start_time = get_absolute_time();
     if (argc != 5 && argc != 6)
         return (valid_input(), 1);
     if (check_arg_if_int(argv[1]) == 1 || check_arg_if_int(argv[2]) == 1 || check_arg_if_int(argv[3]) == 1 || check_arg_if_int(argv[4]) == 1)
@@ -45,6 +45,14 @@ int main(int argc, char *argv[])
 		free(input.philo);
     	return (0);
 	}
+	input.mutex_fork = malloc(sizeof(pthread_mutex_t) * input.n_philo);
+	i = 0;
+	while (i < input.n_philo)
+	{
+		if (pthread_mutex_init(&input.mutex_fork[i], NULL) != 0)
+			return (free(input.philo), 1);
+		i++;
+	}
 	while (i < input.n_philo - 1)
 	{
 		input.philo[i].id = i + 1;
@@ -69,14 +77,6 @@ int main(int argc, char *argv[])
 	while (i < input.n_philo)
 	{
 		if (pthread_join(threads[i], NULL) != 0)
-			return (free(input.philo), 1);
-		i++;
-	}
-	input.mutex_fork = malloc(sizeof(pthread_mutex_t) * input.n_philo);
-	i = 0;
-	while (i < input.n_philo)
-	{
-		if (pthread_mutex_init(&input.mutex_fork[i], NULL) != 0)
 			return (free(input.philo), 1);
 		i++;
 	}
