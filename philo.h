@@ -43,7 +43,7 @@ long get_absolute_time(void);
 long get_current_time(t_data *data);
 
 // routines
-void one_philo(t_data input);
+void one_philo(t_data *input);
 void *routine_one_philo(void *data);
 void *routine(void *data);
 

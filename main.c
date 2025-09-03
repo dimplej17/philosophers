@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     input.philo = malloc(sizeof(t_philo) * input.n_philo);
     if (input.n_philo == 1)
 	{
-		one_philo(input);
+		one_philo(&input);
 		free(input.philo);
     	return (0);
 	}
@@ -59,11 +59,13 @@ int main(int argc, char *argv[])
 		input.philo[i].left_fork = i;
 		input.philo[i].right_fork = i + 1;
 		input.philo[i].last_meal_eaten = input.start_time;
+		input.philo[i].data = &input;
 		i++;
 	}
 	input.philo[i].id = i + 1;
 	input.philo[i].left_fork = i;
 	input.philo[i].right_fork = 0;
+	input.philo[i].last_meal_eaten = input.start_time;
     input.philo[i].data = &input;
 	pthread_t threads[input.n_philo];
 	i = 0;

@@ -19,16 +19,16 @@ void *routine_one_philo(void *data)
     return (NULL);
 }
 
-void one_philo(t_data input)
+void one_philo(t_data *input)
 {
-	input.philo[0].id = 1;
-	input.philo[0].left_fork = 0;
-	input.philo[0].right_fork = -1;
-	(void)input.philo[0].right_fork;
-	input.philo[0].last_meal_eaten = input.start_time;
-	input.philo[0].data = &input;
+	input->philo[0].id = 1;
+	input->philo[0].left_fork = 0;
+	input->philo[0].right_fork = -1;
+	(void)input->philo[0].right_fork;
+	input->philo[0].last_meal_eaten = input->start_time;
+	input->philo[0].data = input;
 	pthread_t t_id1;
-	if (pthread_create(&t_id1, NULL, routine_one_philo, &input.philo[0]) != 0)
+	if (pthread_create(&t_id1, NULL, routine_one_philo, &input->philo[0]) != 0)
 		return ;
 	if (pthread_join(t_id1, NULL) != 0)
 		return ;
