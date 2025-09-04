@@ -41,6 +41,13 @@ void *routine(void *data)
 
 	while (1)
 	{
+		pthread_mutex_lock(&philo->data->mutex_stop);
+    if (philo->data->stop)
+    {
+        pthread_mutex_unlock(&philo->data->mutex_stop);
+        break; // exit the thread
+    }
+    pthread_mutex_unlock(&philo->data->mutex_stop);
     if (philo->id % 2 != 0)
 	{if (pthread_mutex_lock(&philo->data->mutex_fork[philo->left_fork]) != 0)
 		return (NULL);
@@ -66,32 +73,26 @@ void *routine(void *data)
 	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
 }
 	printf("%ld %d is eating\n", get_current_time(philo->data), philo->id);
-	usleep(philo->data->time_to_eat * 1000);
-	philo->last_meal_eaten = get_current_time(philo->data);
+// Protect the update with mutex
+pthread_mutex_lock(&philo->data->mutex_stop);
+philo->last_meal_eaten = get_absolute_time();
+pthread_mutex_unlock(&philo->data->mutex_stop);
+usleep(philo->data->time_to_eat * 1000);
 	if (pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]))	
 		return (NULL);
 	if (pthread_mutex_unlock(&philo->data->mutex_fork[philo->right_fork]))	
 		return (NULL);
 	printf("%ld %d is sleeping\n", get_current_time(philo->data), philo->id);
 	usleep(philo->data->time_to_sleep * 1000);
+	pthread_mutex_lock(&philo->data->mutex_stop);
+        if (philo->data->stop) {
+            pthread_mutex_unlock(&philo->data->mutex_stop);
+            break;
+        }
+        pthread_mutex_unlock(&philo->data->mutex_stop);
 	printf("%ld %d is thinking\n", get_current_time(philo->data), philo->id);
 	}
 	return (NULL);
 }
 
 // simulation stopping - when a philo dies or when all philos have eaten must_eat number of times.
-// when does a philo die? - 
-
-// if (get_current_time() > philo->input.time_to_die)
-// 	{printf("%ld %ld died\n", get_current_time(), philo->id);
-// 	return (NULL);}
-// 	if ((get_current_time() - input->philo[i].last_meal_eaten) > input.time_to_die)
-// 	{printf("%ld %ld died\n", get_current_time(), input->philo->id); 
-// 	return (NULL);}
-
-
-// if ((get_current_time(philo->data) - philo->last_meal_eaten) >= philo->data->time_to_die)
-//         {
-//             printf("%ld %d died\n", get_current_time(philo->data), philo->id);
-//             return (NULL);
-//         }

@@ -16,7 +16,6 @@ typedef struct s_philo
 	int left_fork;
     int right_fork;
 	long last_meal_eaten;
-    int     stop; // flag: someone died or all ate enough
 	struct s_data *data;
 }	t_philo;
 
@@ -29,6 +28,8 @@ typedef struct s_data
     long     must_eat;        // -1 if not provided
     long    start_time;      // when simulation began
     pthread_mutex_t *mutex_fork;
+    int     stop; // flag: someone died or all ate enough
+    pthread_mutex_t mutex_stop;
     t_philo *philo;
 }   t_data;
 
@@ -41,11 +42,15 @@ long get_absolute_time(void);
 
 // helper2
 long get_current_time(t_data *data);
+int should_stop(t_philo *philo);
 
 // routines
 void one_philo(t_data *input);
 void *routine_one_philo(void *data);
 void *routine(void *data);
+
+// routines2
+void *monitor_routine(void *data);
 
 
 

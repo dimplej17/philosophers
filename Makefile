@@ -3,7 +3,8 @@ NAME = philo
 SRCS = main.c \
 	   helper1.c \
 	   helper2.c \
-	   routines.c \
+	   routines1.c \
+	   routines2.c \
 
 OBJS = $(SRCS:%.c=%.o)
 

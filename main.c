@@ -8,10 +8,12 @@
 
 int main(int argc, char *argv[])
 {
+	// initialisation
     t_data input;
 	int i;
 	i = 0;
     input.start_time = get_absolute_time();
+	// initial arg checks
     if (argc != 5 && argc != 6)
         return (valid_input(), 1);
     if (check_arg_if_int(argv[1]) == 1 || check_arg_if_int(argv[2]) == 1 || check_arg_if_int(argv[3]) == 1 || check_arg_if_int(argv[4]) == 1)
@@ -21,9 +23,9 @@ int main(int argc, char *argv[])
         if (check_arg_if_int(argv[1]) == 1)
             return (valid_input(), 1);
     }
-    
+    // input validity checks
     input.n_philo = ft_atol(argv[1]);
-    if (input.n_philo < 1 || input.n_philo > 200) // minimum how many philosophers?
+    if (input.n_philo < 1 || input.n_philo > 200) 
         return (valid_input(), 1);
     input.time_to_die = ft_atol(argv[2]);
     input.time_to_eat = ft_atol(argv[3]);
@@ -33,19 +35,30 @@ int main(int argc, char *argv[])
     if (argc == 6)
     {
         input.must_eat = ft_atol(argv[5]);
-        if (input.must_eat < 1 || input.must_eat > INT_MAX) // idk what the minimum & max for this is
+        if (input.must_eat < 1 || input.must_eat > INT_MAX) // idk what the minimum (0 or 1?) & max for this is
             return (valid_input(), 1);
     }
     else
     	input.must_eat = -1;
     input.philo = malloc(sizeof(t_philo) * input.n_philo);
+	if (!input.philo)
+		return (1);
+	// handling input of 1 philo
     if (input.n_philo == 1)
 	{
 		one_philo(&input);
 		free(input.philo);
     	return (0);
 	}
+	input.stop = 0;
+	if (pthread_mutex_init(&input.mutex_stop, NULL) != 0)
+		return (free(input.philo), 1);
 	input.mutex_fork = malloc(sizeof(pthread_mutex_t) * input.n_philo);
+	if (!input.mutex_fork)
+	{
+		free (input.philo);
+		return (1);
+	}
 	i = 0;
 	while (i < input.n_philo)
 	{
@@ -53,6 +66,9 @@ int main(int argc, char *argv[])
 			return (free(input.philo), 1);
 		i++;
 	}
+
+	// creating philos
+	i = 0;
 	while (i < input.n_philo - 1)
 	{
 		input.philo[i].id = i + 1;
@@ -67,11 +83,45 @@ int main(int argc, char *argv[])
 	input.philo[i].right_fork = 0;
 	input.philo[i].last_meal_eaten = input.start_time;
     input.philo[i].data = &input;
+	// creating a thread for each philo
 	pthread_t threads[input.n_philo];
 	i = 0;
 	while (i < input.n_philo)
 	{
 		if (pthread_create(&threads[i], NULL, routine, &input.philo[i]) != 0)
+		{
+			i = 0;
+			while (i < input.n_philo)
+		{
+			if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
+				return (free(input.philo), 1);
+			i++;
+		}
+			return (free(input.philo), 1);
+		}
+		i++;
+	}
+	// creating a monitor thread
+	pthread_t monitor_thread;
+	if (pthread_create(&monitor_thread, NULL, monitor_routine, &input) != 0)
+	{
+		i = 0;
+		while (i < input.n_philo)
+	{
+		if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
+			return (free(input.philo), 1);
+		i++;
+	}
+		pthread_mutex_destroy(&input.mutex_stop);
+		return (free(input.philo), 1);
+	}
+	// monitor thread join
+	if (pthread_join(monitor_thread, NULL) != 0)
+	{
+		i = 0;
+		while (i < input.n_philo)
+	{
+		if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
 			return (free(input.philo), 1);
 		i++;
 	}
@@ -82,6 +132,10 @@ int main(int argc, char *argv[])
 			return (free(input.philo), 1);
 		i++;
 	}
+	
+	pthread_mutex_destroy(&input.mutex_stop);
+	return (free(input.philo), 1);
+	}
 	i = 0;
 	while (i < input.n_philo)
 	{
@@ -89,6 +143,8 @@ int main(int argc, char *argv[])
 			return (free(input.philo), 1);
 		i++;
 	}
+	if (pthread_mutex_destroy(&input.mutex_stop) != 0)
+		return (free(input.philo), 1);
 	free(input.philo);
     return (0);
 }
