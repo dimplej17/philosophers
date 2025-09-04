@@ -42,7 +42,7 @@ long get_absolute_time(void);
 
 // helper2
 long get_current_time(t_data *data);
-int should_stop(t_philo *philo);
+// int should_stop(t_philo *philo);
 
 // routines
 void one_philo(t_data *input);
