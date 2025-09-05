@@ -43,29 +43,29 @@ int main(int argc, char *argv[])
     input.philo = malloc(sizeof(t_philo) * input.n_philo);
 	if (!input.philo)
 		return (1);
-	// handling input of 1 philo
-    if (input.n_philo == 1)
-	{
-		one_philo(&input);
-		free(input.philo);
-    	return (0);
-	}
+	
 	input.stop = 0;
 	if (pthread_mutex_init(&input.mutex_stop, NULL) != 0)
 		return (free(input.philo), 1);
 	input.mutex_fork = malloc(sizeof(pthread_mutex_t) * input.n_philo);
 	if (!input.mutex_fork)
 	{
-		free (input.philo);
-		return (1);
+		pthread_mutex_destroy(&input.mutex_stop);
+		return (free(input.philo), 1);
 	}
 	i = 0;
 	while (i < input.n_philo)
 	{
 		if (pthread_mutex_init(&input.mutex_fork[i], NULL) != 0)
+		{
+			pthread_mutex_destroy(&input.mutex_stop);
 			return (free(input.philo), 1);
+		}
 		i++;
 	}
+	// handling input of 1 philo
+    if (input.n_philo == 1)
+		return (one_philo(&input), cleanup(&input), 0);
 
 	// creating philos
 	i = 0;
@@ -89,62 +89,23 @@ int main(int argc, char *argv[])
 	while (i < input.n_philo)
 	{
 		if (pthread_create(&threads[i], NULL, routine, &input.philo[i]) != 0)
-		{
-			i = 0;
-			while (i < input.n_philo)
-		{
-			if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
-				return (free(input.philo), 1);
-			i++;
-		}
-			return (free(input.philo), 1);
-		}
+			return (cleanup(&input), 1);
 		i++;
 	}
 	// creating a monitor thread
 	pthread_t monitor_thread;
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, &input) != 0)
-	{
-		i = 0;
-		while (i < input.n_philo)
-	{
-		if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
-			return (free(input.philo), 1);
-		i++;
-	}
-		pthread_mutex_destroy(&input.mutex_stop);
-		return (free(input.philo), 1);
-	}
+		return (cleanup(&input), 1);
 	// monitor thread join
 	if (pthread_join(monitor_thread, NULL) != 0)
-	{
-		i = 0;
-		while (i < input.n_philo)
-	{
-		if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
-			return (free(input.philo), 1);
-		i++;
-	}
+		return (cleanup(&input), 1);
 	i = 0;
 	while (i < input.n_philo)
 	{
 		if (pthread_join(threads[i], NULL) != 0)
-			return (free(input.philo), 1);
+			return (cleanup(&input), 1);
 		i++;
 	}
-	
-	pthread_mutex_destroy(&input.mutex_stop);
-	return (free(input.philo), 1);
-	}
-	i = 0;
-	while (i < input.n_philo)
-	{
-		if (pthread_mutex_destroy (&input.mutex_fork[i]) != 0)
-			return (free(input.philo), 1);
-		i++;
-	}
-	if (pthread_mutex_destroy(&input.mutex_stop) != 0)
-		return (free(input.philo), 1);
-	free(input.philo);
+	return (cleanup(&input), 1);
     return (0);
 }

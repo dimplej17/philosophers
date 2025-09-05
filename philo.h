@@ -43,17 +43,26 @@ long get_absolute_time(void);
 
 // helper2
 long get_current_time(t_data *data);
-// int should_stop(t_philo *philo);
 int check_all_eaten_enough(t_data *input);
+void cleanup(t_data *data);
 
-
-// routines
+// routine1
 void one_philo(t_data *input);
 void *routine_one_philo(void *data);
+void think_phase(t_philo *philo);
 void *routine(void *data);
 
-// routines2
+// monitor routine
 void *monitor_routine(void *data);
+
+// routine1 helpers
+int should_stop(t_philo *philo);
+int take_forks(t_philo *philo);
+void eat(t_philo *philo);
+void drop_forks(t_philo *philo);
+void sleep_phase(t_philo *philo);
+
+
 
 
 
