@@ -16,6 +16,7 @@ typedef struct s_philo
 	int left_fork;
     int right_fork;
 	long last_meal_eaten;
+    int     meals_eaten;
 	struct s_data *data;
 }	t_philo;
 
@@ -43,6 +44,8 @@ long get_absolute_time(void);
 // helper2
 long get_current_time(t_data *data);
 // int should_stop(t_philo *philo);
+int check_all_eaten_enough(t_data *input);
+
 
 // routines
 void one_philo(t_data *input);

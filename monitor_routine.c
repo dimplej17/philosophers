@@ -18,17 +18,7 @@ void *monitor_routine(void *data)
                 pthread_mutex_unlock(&input->mutex_stop);
                 return (NULL);
             }
-            
-            // Read last_meal_eaten while STILL holding the mutex
-            since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
-            
-            // if (since_meal >= input->time_to_die) {
-            //     if (!input->stop) {
-            //         input->stop = 1;
-            //         printf("%ld %d died\n", get_current_time(input), input->philo[i].id);
-            //     }
-            //     pthread_mutex_unlock(&input->mutex_stop);
-            //     return (NULL);
+        since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
             if (since_meal >= input->time_to_die) {
     if (!input->stop) {
         input->stop = 1;
@@ -41,7 +31,15 @@ void *monitor_routine(void *data)
             pthread_mutex_unlock(&input->mutex_stop);
             i++;
         }
+        // Check if all have eaten enough (if must_eat is specified)
+        if (input->must_eat > 0 && check_all_eaten_enough(input)) {
+            pthread_mutex_lock(&input->mutex_stop);
+            input->stop = 1;
+            pthread_mutex_unlock(&input->mutex_stop);
+            return (NULL);
+        }
         usleep(1000); // Small delay between checks
     }
     return (NULL);
 }
+
