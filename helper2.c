@@ -30,3 +30,33 @@ void cleanup(t_data *data)
     free(data->mutex_fork);
     free(data->philo);
 }
+
+int create_thread_philo(t_data *input)
+{
+	int i;
+	input->threads = malloc(sizeof(pthread_t) * input->n_philo);
+	if (!input->threads)
+		return (1);
+	i = 0;
+	while (i < input->n_philo)
+	{
+		if (pthread_create(&input->threads[i], NULL, routine, &input->philo[i]) != 0)
+			return (free(input->threads), 1);
+		i++;
+	}
+	return (0);
+}
+
+int ft_philo_threads_join(t_data *input)
+	{
+		int i;
+		i = 0;
+		while (i < input->n_philo)
+	{
+		if (pthread_join(input->threads[i], NULL) != 0)
+			return (1);
+		i++;
+	}
+		return (0);
+	}
+	

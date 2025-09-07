@@ -28,11 +28,18 @@ typedef struct s_data
     long     time_to_sleep;
     long     must_eat;        // -1 if not provided
     long    start_time;      // when simulation began
-    pthread_mutex_t *mutex_fork;
+    pthread_t *threads;
+	pthread_mutex_t *mutex_fork;
     int     stop; // flag: someone died or all ate enough
     pthread_mutex_t mutex_stop;
     t_philo *philo;
 }   t_data;
+
+// main
+int validate_args(int argc, char *argv[]);
+int atol_args(t_data *input, int argc, char *argv[]);
+int init_mutexes(t_data *input);
+void create_philos(t_data *input);
 
 // helper1
 void valid_input(void);
@@ -45,6 +52,8 @@ long get_absolute_time(void);
 long get_current_time(t_data *data);
 int check_all_eaten_enough(t_data *input);
 void cleanup(t_data *data);
+int create_thread_philo(t_data *input);
+int ft_philo_threads_join(t_data *input);
 
 // routine1
 void one_philo(t_data *input);

@@ -7,14 +7,20 @@ void *routine_one_philo(void *data)
 	t_philo *philo;
 	philo  = (t_philo *)data;
 
+	if (pthread_mutex_lock(&philo->data->mutex_fork[philo->left_fork]) != 0)
+		return (NULL);
 	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
+
     while (1)
     {
         if ((get_absolute_time() - philo->last_meal_eaten) >= philo->data->time_to_die)
         {
+			if (pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]) != 0)
+				return (NULL);
             printf("%ld %d died\n", get_current_time(philo->data), philo->id);
             return (NULL);
         }
+		usleep(1000);
 	}
     return (NULL);
 }
@@ -36,8 +42,10 @@ void one_philo(t_data *input)
 
 void think_phase(t_philo *philo)
 {
+	if (should_stop(philo))
+		return;
+		
 	printf("%ld %d is thinking\n", get_current_time(philo->data), philo->id);
-	// Add small delay to prevent excessive CPU usage
 	usleep(1000);
 }
 
@@ -47,21 +55,34 @@ void *routine(void *data)
 	
 	// Stagger even-numbered philosophers to reduce initial contention
 	if (philo->id % 2 == 0)
-		usleep(philo->data->time_to_eat * 500); // Half eating time delay
+		usleep(philo->data->time_to_eat * 500);
 	
 	while (!should_stop(philo))
 	{
-		if (!take_forks(philo))
+		// Check before taking forks
+		if (should_stop(philo))
 			break;
 			
+		if (!take_forks(philo))
+			break;
+		
+		// Check before eating
+		if (should_stop(philo))
+		{
+			drop_forks(philo);
+			break;
+		}
+		
 		eat(philo);
 		drop_forks(philo);
 		
+		// Check before sleeping
 		if (should_stop(philo))
 			break;
 			
 		sleep_phase(philo);
 		
+		// Check before thinking
 		if (should_stop(philo))
 			break;
 			
@@ -69,6 +90,35 @@ void *routine(void *data)
 	}
 	return (NULL);
 }
+
+// void *routine(void *data)
+// {
+// 	t_philo *philo = (t_philo *)data;
+	
+// 	// Stagger even-numbered philosophers to reduce initial contention
+// 	if (philo->id % 2 == 0)
+// 		usleep(philo->data->time_to_eat * 500); // Half eating time delay
+	
+// 	while (!should_stop(philo))
+// 	{
+// 		if (!take_forks(philo))
+// 			break;
+			
+// 		eat(philo);
+// 		drop_forks(philo);
+		
+// 		if (should_stop(philo))
+// 			break;
+			
+// 		sleep_phase(philo);
+		
+// 		if (should_stop(philo))
+// 			break;
+			
+// 		think_phase(philo);
+// 	}
+// 	return (NULL);
+// }
 
 
 // int should_stop(t_philo *philo)

@@ -38,7 +38,7 @@ void *monitor_routine(void *data)
             pthread_mutex_unlock(&input->mutex_stop);
             return (NULL);
         }
-        usleep(1000); // Small delay between checks
+        usleep(500); // Small delay between checks
     }
     return (NULL);
 }
