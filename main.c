@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:08 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 19:15:43 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:50:51 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	main(int argc, char *argv[])
 	if (init_mutexes(&input) != 0)
 		return (1);
 	if (input.n_philo == 1)
-		return (one_philo(&input), cleanup(&input), del_meal_mut(&input), 0);
+		return (one_philo(&input), del_meal_mut(&input), cleanup(&input), 0);
 	if (create_philos(&input) != 0)
 		return (cleanup(&input), 1);
 	if (create_thread_philo(&input) != 0)
