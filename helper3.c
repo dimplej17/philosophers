@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:34 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 19:44:03 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:02:03 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,16 @@ long	get_time_since_meal(t_data *input, int i)
 	return (since_meal);
 }
 
-int	handle_death(t_data *input, int i)
+int handle_death(t_data *input, int i)
 {
-	pthread_mutex_lock(&input->print_mutex);
-	pthread_mutex_lock(&input->mutex_stop);
-	if (!input->stop)
-	{
-		input->stop = 1;
-		printf("%ld %d died\n", get_current_time(input), input->philo[i].id);
-	}
-	pthread_mutex_unlock(&input->mutex_stop);
-	pthread_mutex_unlock(&input->print_mutex);
-	return (1);
+    pthread_mutex_lock(&input->mutex_stop);
+    if (!input->stop)
+    {
+        input->stop = 1;
+        pthread_mutex_lock(&input->print_mutex);
+        printf("%ld %d died\n", get_current_time(input), input->philo[i].id);
+        pthread_mutex_unlock(&input->print_mutex);
+    }
+    pthread_mutex_unlock(&input->mutex_stop);
+    return (1);
 }
