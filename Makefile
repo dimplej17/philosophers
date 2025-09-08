@@ -1,13 +1,14 @@
 NAME = philo
 
 SRCS = main.c \
+	   input_parser.c \
 	   helper1.c \
 	   helper2.c \
 	   helper3.c \
-	   routine1.c \
+	   routine_thread.c \
 	   monitor_routine.c \
-	   routine1_helper1.c \
-	   routine1_helper2.c
+	   routine_actions.c.c \
+	   routine_forks.c
 
 OBJS = $(SRCS:%.c=%.o)
 

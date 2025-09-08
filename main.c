@@ -6,49 +6,11 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:08 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 19:50:51 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:34:03 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	validate_args(int argc, char *argv[])
-{
-	if (argc != 5 && argc != 6)
-		return (valid_input(), 1);
-	if (check_arg_if_int(argv[1]) == 1 || check_arg_if_int(argv[2]) == 1
-		|| check_arg_if_int(argv[3]) == 1 || check_arg_if_int(argv[4]) == 1)
-		return (valid_input(), 1);
-	if (argc == 6)
-	{
-		if (check_arg_if_int(argv[5]) == 1)
-			return (valid_input(), 1);
-	}
-	return (0);
-}
-
-int	atol_args(t_data *input, int argc, char *argv[])
-{
-	input->n_philo = ft_atol(argv[1]);
-	if (input->n_philo < 1 || input->n_philo > 200)
-		return (valid_input(), 1);
-	input->time_to_die = ft_atol(argv[2]);
-	input->time_to_eat = ft_atol(argv[3]);
-	input->time_to_sleep = ft_atol(argv[4]);
-	if (arg_time_check(input->time_to_die) == 1
-		|| arg_time_check(input->time_to_eat) == 1
-		|| arg_time_check(input->time_to_sleep) == 1)
-		return (valid_input(), 1);
-	if (argc == 6)
-	{
-		input->must_eat = ft_atol(argv[5]);
-		if (input->must_eat < 1 || input->must_eat > INT_MAX)
-			return (valid_input(), 1);
-	}
-	else
-		input->must_eat = -1;
-	return (0);
-}
 
 int	init_mutexes(t_data *input)
 {

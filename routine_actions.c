@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine1_helpers.c                                 :+:      :+:    :+:   */
+/*   routine_actions.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:40 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 19:28:53 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:35:28 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	eat(t_philo *philo)
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->meal_mutex);
 	safe_print(philo->data, philo->id, "is eating");
-	usleep(philo->data->time_to_eat * 1000);
+	smart_sleep(philo->data->time_to_eat, philo);
 	pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]);
 	pthread_mutex_unlock(&philo->data->mutex_fork[philo->right_fork]);
 }
@@ -45,5 +45,5 @@ void	sleep_phase(t_philo *philo)
 	if (should_stop(philo))
 		return ;
 	safe_print(philo->data, philo->id, "is sleeping");
-	usleep(philo->data->time_to_sleep * 1000);
+	smart_sleep(philo->data->time_to_sleep, philo);
 }

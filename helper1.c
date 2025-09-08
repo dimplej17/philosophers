@@ -5,25 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/08 17:59:48 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:27:49 by djanardh         ###   ########.fr       */
+/*   Created: 2025/09/08 17:59:39 by djanardh          #+#    #+#             */
+/*   Updated: 2025/09/08 22:33:59 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	valid_input(void)
-{
-	printf("valid input: number_of_philosophers time_to_die time_to_eat ");
-	printf("time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
-}
-
-int	arg_time_check(long n)
-{
-	if (n > INT_MAX || n < 60)
-		return (1);
-	return (0);
-}
 
 long	ft_atol(char *str)
 {
@@ -53,26 +40,6 @@ long	ft_atol(char *str)
 	return (result * sign);
 }
 
-int	check_arg_if_int(char *str)
-{
-	int	count;
-
-	if (!str || !str[0])
-		return (1);
-	count = 0;
-	if (str[0] == '-' || str[0] == '+')
-		count++;
-	if (!str[count])
-		return (1);
-	while (str[count] != '\0')
-	{
-		if (str[count] < '0' || str[count] > '9')
-			return (1);
-		count++;
-	}
-	return (0);
-}
-
 long	get_absolute_time(void)
 {
 	long			ms;
@@ -81,4 +48,22 @@ long	get_absolute_time(void)
 	gettimeofday(&absolute_time, NULL);
 	ms = absolute_time.tv_sec * 1000L + absolute_time.tv_usec / 1000L;
 	return (ms);
+}
+
+long	get_current_time(t_data *data)
+{
+	return (get_absolute_time() - data->start_time);
+}
+
+void	smart_sleep(long duration, t_philo *philo)
+{
+	long	start_of_sleep;
+
+	start_of_sleep = get_absolute_time();
+	while (!should_stop(philo))
+	{
+		if (get_absolute_time() - start_of_sleep >= duration)
+			break ;
+		usleep(100);
+	}
 }

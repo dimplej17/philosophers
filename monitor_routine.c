@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:19 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:24:04 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:07:49 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,15 @@ int	monitor_all_philosophers(t_data *input)
 	return (0);
 }
 
-int	handle_all_eaten(t_data *input)
-{
-	pthread_mutex_lock(&input->mutex_stop);
-	input->stop = 1;
-	pthread_mutex_unlock(&input->mutex_stop);
-	return (1);
-}
-
 int	check_eating_completion(t_data *input)
 {
 	if (input->must_eat > 0 && check_all_eaten_enough(input))
-		return (handle_all_eaten(input));
+	{
+		pthread_mutex_lock(&input->mutex_stop);
+		input->stop = 1;
+		pthread_mutex_unlock(&input->mutex_stop);
+		return (1);
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:30 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 19:29:51 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:29:15 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,23 @@ typedef struct s_data
 }					t_data;
 
 // main
-int					validate_args(int argc, char *argv[]);
-int					atol_args(t_data *input, int argc, char *argv[]);
 int					init_mutexes(t_data *input);
 int					create_philos(t_data *input);
 
-// helper1
+// input parser
 void				valid_input(void);
 int					arg_time_check(long n);
-long				ft_atol(char *str);
 int					check_arg_if_int(char *str);
+int					validate_args(int argc, char *argv[]);
+int					atol_args(t_data *input, int argc, char *argv[]);
+
+// helper1
+long				ft_atol(char *str);
 long				get_absolute_time(void);
+long				get_current_time(t_data *data);
+void				smart_sleep(long duration, t_philo *philo);
 
 // helper2
-long				get_current_time(t_data *data);
 int					check_all_eaten_enough(t_data *input);
 void				cleanup(t_data *data);
 void				del_meal_mut(t_data *data);
@@ -74,7 +77,7 @@ int					check_stop_status(t_data *input);
 long				get_time_since_meal(t_data *input, int i);
 int					handle_death(t_data *input, int i);
 
-// routine1
+// routine_thread
 void				one_philo(t_data *input);
 void				*routine_one_philo(void *data);
 void				think_phase(t_philo *philo);
@@ -83,17 +86,16 @@ void				*routine(void *data);
 // monitor routine
 int					check_philosopher_death(t_data *input, int i);
 int					monitor_all_philosophers(t_data *input);
-int					handle_all_eaten(t_data *input);
 int					check_eating_completion(t_data *input);
 void				*monitor_routine(void *data);
 
-// routine1 helper1
+// routine_actions
 int					should_stop(t_philo *philo);
 void				eat(t_philo *philo);
 void				drop_forks(t_philo *philo);
 void				sleep_phase(t_philo *philo);
 
-// routine1 helper2
+// routine_forks
 int					take_forks(t_philo *philo);
 
 #endif

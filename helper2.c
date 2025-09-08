@@ -5,17 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/08 17:59:39 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 19:12:45 by djanardh         ###   ########.fr       */
+/*   Created: 2025/09/08 21:39:30 by djanardh          #+#    #+#             */
+/*   Updated: 2025/09/08 21:39:37 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-long	get_current_time(t_data *data)
-{
-	return (get_absolute_time() - data->start_time);
-}
 
 int	check_all_eaten_enough(t_data *input)
 {
