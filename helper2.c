@@ -6,50 +6,53 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:39 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:15:13 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:12:45 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long get_current_time(t_data *data)
+long	get_current_time(t_data *data)
 {
 	return (get_absolute_time() - data->start_time);
 }
 
-int check_all_eaten_enough(t_data *input)
+int	check_all_eaten_enough(t_data *input)
 {
-    int i = 0;
+	int	i;
 
-    while (i < input->n_philo)
-    {
-        pthread_mutex_lock(&input->philo[i].meal_mutex);
-        if (input->philo[i].meals_eaten < input->must_eat)
-        {
-            pthread_mutex_unlock(&input->philo[i].meal_mutex);
-            return (0);
-        }
-        pthread_mutex_unlock(&input->philo[i].meal_mutex);
-        i++;
-    }
-    return (1);
-}
-
-void cleanup(t_data *data)
-{
-    int i;
 	i = 0;
-    while (i < data->n_philo)
-        pthread_mutex_destroy(&data->mutex_fork[i++]);
-    pthread_mutex_destroy(&data->mutex_stop);
-	pthread_mutex_destroy(&data->print_mutex);
-    free(data->mutex_fork);
-    free(data->philo);
+	while (i < input->n_philo)
+	{
+		pthread_mutex_lock(&input->philo[i].meal_mutex);
+		if (input->philo[i].meals_eaten < input->must_eat)
+		{
+			pthread_mutex_unlock(&input->philo[i].meal_mutex);
+			return (0);
+		}
+		pthread_mutex_unlock(&input->philo[i].meal_mutex);
+		i++;
+	}
+	return (1);
 }
 
-void destroy_meal_mutex(t_data *data)
+void	cleanup(t_data *data)
 {
-	int i;
+	int	i;
+
+	i = 0;
+	pthread_mutex_destroy(&data->mutex_stop);
+	pthread_mutex_destroy(&data->print_mutex);
+	while (i < data->n_philo)
+		pthread_mutex_destroy(&data->mutex_fork[i++]);
+	free(data->mutex_fork);
+	free(data->philo);
+}
+
+void	del_meal_mut(t_data *data)
+{
+	int	i;
+
 	i = 0;
 	while (i < data->n_philo)
 	{
@@ -58,16 +61,18 @@ void destroy_meal_mutex(t_data *data)
 	}
 }
 
-int create_thread_philo(t_data *input)
+int	create_thread_philo(t_data *input)
 {
-	int i;
+	int	i;
+
 	input->threads = malloc(sizeof(pthread_t) * input->n_philo);
 	if (!input->threads)
 		return (1);
 	i = 0;
 	while (i < input->n_philo)
 	{
-		if (pthread_create(&input->threads[i], NULL, routine, &input->philo[i]) != 0)
+		if (pthread_create(&input->threads[i], NULL, routine,
+				&input->philo[i]) != 0)
 			return (free(input->threads), 1);
 		i++;
 	}

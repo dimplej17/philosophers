@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:08 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 17:59:21 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:15:43 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	init_mutexes(t_data *input)
 {
 	int	i;
 
+	input->stop = 0;
 	if (pthread_mutex_init(&input->mutex_stop, NULL) != 0)
 		return (free(input->philo), 1);
 	if (pthread_mutex_init(&input->print_mutex, NULL) != 0)
@@ -82,7 +83,6 @@ int	create_philos(t_data *input)
 	int	i;
 
 	i = 0;
-	input->stop = 0;
 	while (i < input->n_philo - 1)
 	{
 		input->philo[i].id = i + 1;
@@ -112,9 +112,7 @@ int	main(int argc, char *argv[])
 	pthread_t	monitor_thread;
 
 	input.start_time = get_absolute_time();
-	if (validate_args(argc, argv) != 0)
-		return (1);
-	if (atol_args(&input, argc, argv) != 0)
+	if (validate_args(argc, argv) != 0 || atol_args(&input, argc, argv) != 0)
 		return (1);
 	input.philo = malloc(sizeof(t_philo) * input.n_philo);
 	if (!input.philo)
@@ -122,20 +120,16 @@ int	main(int argc, char *argv[])
 	if (init_mutexes(&input) != 0)
 		return (1);
 	if (input.n_philo == 1)
-		return (one_philo(&input), cleanup(&input), 0);
+		return (one_philo(&input), cleanup(&input), del_meal_mut(&input), 0);
 	if (create_philos(&input) != 0)
 		return (cleanup(&input), 1);
 	if (create_thread_philo(&input) != 0)
-		return (destroy_meal_mutex(&input), cleanup(&input), 1);
+		return (del_meal_mut(&input), cleanup(&input), 1);
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, &input) != 0)
-		return (destroy_meal_mutex(&input), free(input.threads),
-			cleanup(&input), 1);
+		return (del_meal_mut(&input), free(input.threads), cleanup(&input), 1);
 	if (pthread_join(monitor_thread, NULL) != 0)
-		return (destroy_meal_mutex(&input), free(input.threads),
-			cleanup(&input), 1);
+		return (del_meal_mut(&input), free(input.threads), cleanup(&input), 1);
 	if (ft_philo_threads_join(&input) != 0)
-		return (destroy_meal_mutex(&input), free(input.threads),
-			cleanup(&input), 1);
-	return (destroy_meal_mutex(&input), free(input.threads), cleanup(&input),
-		0);
+		return (del_meal_mut(&input), free(input.threads), cleanup(&input), 1);
+	return (del_meal_mut(&input), free(input.threads), cleanup(&input), 0);
 }

@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:30 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:24:58 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:29:51 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ typedef struct s_data
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
-	long must_eat;   // -1 if not provided
-	long start_time; // when simulation began
+	long			must_eat;
+	long			start_time;
 	pthread_t		*threads;
 	pthread_mutex_t	*mutex_fork;
-	int stop; // flag: someone died or all ate enough
+	int				stop;
 	pthread_mutex_t	mutex_stop;
 	pthread_mutex_t	print_mutex;
 	t_philo			*philo;
@@ -64,7 +64,7 @@ long				get_absolute_time(void);
 long				get_current_time(t_data *data);
 int					check_all_eaten_enough(t_data *input);
 void				cleanup(t_data *data);
-void				destroy_meal_mutex(t_data *data);
+void				del_meal_mut(t_data *data);
 int					create_thread_philo(t_data *input);
 
 // helper 3
@@ -87,11 +87,13 @@ int					handle_all_eaten(t_data *input);
 int					check_eating_completion(t_data *input);
 void				*monitor_routine(void *data);
 
-// routine1 helpers
+// routine1 helper1
 int					should_stop(t_philo *philo);
-int					take_forks(t_philo *philo);
 void				eat(t_philo *philo);
 void				drop_forks(t_philo *philo);
 void				sleep_phase(t_philo *philo);
+
+// routine1 helper2
+int					take_forks(t_philo *philo);
 
 #endif

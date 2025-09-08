@@ -6,7 +6,8 @@ SRCS = main.c \
 	   helper3.c \
 	   routine1.c \
 	   monitor_routine.c \
-	   routine1_helpers.c \
+	   routine1_helper1.c \
+	   routine1_helper2.c
 
 OBJS = $(SRCS:%.c=%.o)
 
