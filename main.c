@@ -65,10 +65,11 @@ int init_mutexes(t_data *input)
 	return (0);
 	}
 
-void create_philos(t_data *input)
+int create_philos(t_data *input)
 {
 		int i;
 		i = 0;
+		input->stop = 0;
 		while (i < input->n_philo - 1)
 	{
 		input->philo[i].id = i + 1;
@@ -77,6 +78,8 @@ void create_philos(t_data *input)
 		input->philo[i].meals_eaten = 0;
 		input->philo[i].last_meal_eaten = input->start_time;
 		input->philo[i].data = input;
+		if (pthread_mutex_init(&input->philo[i].meal_mutex, NULL) != 0)
+			return (1);
 		i++;
 	}
 	input->philo[i].id = i + 1;
@@ -85,7 +88,9 @@ void create_philos(t_data *input)
 	input->philo[i].meals_eaten = 0;
 	input->philo[i].last_meal_eaten = input->start_time;
     input->philo[i].data = input;
-	return ;
+	if (pthread_mutex_init(&input->philo[i].meal_mutex, NULL) != 0)
+			return (1);
+	return (0);
 }
 
 int main(int argc, char *argv[])
@@ -99,20 +104,20 @@ int main(int argc, char *argv[])
     input.philo = malloc(sizeof(t_philo) * input.n_philo);
 	if (!input.philo)
 		return (1);
-	input.stop = 0;
 	if (init_mutexes(&input) != 0)
 		return (1);
     if (input.n_philo == 1)
 		return (one_philo(&input), cleanup(&input), 0);
-	create_philos(&input);
-	if (create_thread_philo(&input) != 0)
+	if (create_philos(&input) != 0)
 		return (cleanup(&input), 1);
+	if (create_thread_philo(&input) != 0)
+		return (destroy_meal_mutex(&input), cleanup(&input), 1);
 	pthread_t monitor_thread;
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, &input) != 0)
-		return (free(input.threads), cleanup(&input), 1);
+		return (destroy_meal_mutex(&input), free(input.threads), cleanup(&input), 1);
 	if (pthread_join(monitor_thread, NULL) != 0)
-		return (free(input.threads), cleanup(&input), 1);
+		return (destroy_meal_mutex(&input), free(input.threads), cleanup(&input), 1);
 	if (ft_philo_threads_join(&input) != 0)
-		return (free(input.threads), cleanup(&input), 1);
-	return (free(input.threads), cleanup(&input), 0);
+		return (destroy_meal_mutex(&input), free(input.threads), cleanup(&input), 1);
+	return (destroy_meal_mutex(&input), free(input.threads), cleanup(&input), 0);
 }

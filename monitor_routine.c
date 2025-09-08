@@ -19,6 +19,9 @@ void *monitor_routine(void *data)
                 return (NULL);
             }
         since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
+        pthread_mutex_lock(&input->philo[i].meal_mutex);
+		since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
+		pthread_mutex_unlock(&input->philo[i].meal_mutex);
             if (since_meal >= input->time_to_die) {
     if (!input->stop) {
         input->stop = 1;

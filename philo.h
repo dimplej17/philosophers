@@ -17,6 +17,7 @@ typedef struct s_philo
     int right_fork;
 	long last_meal_eaten;
     int     meals_eaten;
+    pthread_mutex_t meal_mutex;
 	struct s_data *data;
 }	t_philo;
 
@@ -39,7 +40,7 @@ typedef struct s_data
 int validate_args(int argc, char *argv[]);
 int atol_args(t_data *input, int argc, char *argv[]);
 int init_mutexes(t_data *input);
-void create_philos(t_data *input);
+int create_philos(t_data *input);
 
 // helper1
 void valid_input(void);
@@ -52,6 +53,7 @@ long get_absolute_time(void);
 long get_current_time(t_data *data);
 int check_all_eaten_enough(t_data *input);
 void cleanup(t_data *data);
+void destroy_meal_mutex(t_data *data);
 int create_thread_philo(t_data *input);
 int ft_philo_threads_join(t_data *input);
 

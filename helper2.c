@@ -31,6 +31,17 @@ void cleanup(t_data *data)
     free(data->philo);
 }
 
+void destroy_meal_mutex(t_data *data)
+{
+	int i;
+	i = 0;
+	while (i < data->n_philo)
+	{
+		pthread_mutex_destroy(&data->philo[i].meal_mutex);
+		i++;
+	}
+}
+
 int create_thread_philo(t_data *input)
 {
 	int i;
