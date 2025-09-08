@@ -6,54 +6,65 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:19 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:00:21 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:24:04 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void *monitor_routine(void *data)
+int	check_philosopher_death(t_data *input, int i)
 {
-    t_data *input;
-	input = (t_data *)data;
-    int i;
-    long since_meal;
-    
-    while (1)
-    {
-        i = 0;
-        while (i < input->n_philo)
-        {
-            pthread_mutex_lock(&input->mutex_stop);
-            if (input->stop) {
-                pthread_mutex_unlock(&input->mutex_stop);
-                return (NULL);
-            }
-        pthread_mutex_lock(&input->philo[i].meal_mutex);
-		since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
-		pthread_mutex_unlock(&input->philo[i].meal_mutex);
-            if (since_meal >= input->time_to_die) {
-    if (!input->stop) {
-        input->stop = 1;
-        // printf("%ld %d died\n", get_current_time(input), input->philo[i].id); pineapple
-		safe_print(input, input->philo[i].id,"died");
-    }
-    pthread_mutex_unlock(&input->mutex_stop);
-    return (NULL);
+	long	since_meal;
 
-            }
-            pthread_mutex_unlock(&input->mutex_stop);
-            i++;
-        }
-        // Check if all have eaten enough (if must_eat is specified)
-        if (input->must_eat > 0 && check_all_eaten_enough(input)) {
-            pthread_mutex_lock(&input->mutex_stop);
-            input->stop = 1;
-            pthread_mutex_unlock(&input->mutex_stop);
-            return (NULL);
-        }
-        usleep(500); // Small delay between checks
-    }
-    return (NULL);
+	since_meal = get_time_since_meal(input, i);
+	if (since_meal >= input->time_to_die)
+		return (handle_death(input, i));
+	return (0);
 }
 
+int	monitor_all_philosophers(t_data *input)
+{
+	int	i;
+
+	i = 0;
+	while (i < input->n_philo)
+	{
+		if (check_stop_status(input))
+			return (1);
+		if (check_philosopher_death(input, i))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	handle_all_eaten(t_data *input)
+{
+	pthread_mutex_lock(&input->mutex_stop);
+	input->stop = 1;
+	pthread_mutex_unlock(&input->mutex_stop);
+	return (1);
+}
+
+int	check_eating_completion(t_data *input)
+{
+	if (input->must_eat > 0 && check_all_eaten_enough(input))
+		return (handle_all_eaten(input));
+	return (0);
+}
+
+void	*monitor_routine(void *data)
+{
+	t_data	*input;
+
+	input = (t_data *)data;
+	while (1)
+	{
+		if (monitor_all_philosophers(input))
+			return (NULL);
+		if (check_eating_completion(input))
+			return (NULL);
+		usleep(500);
+	}
+	return (NULL);
+}

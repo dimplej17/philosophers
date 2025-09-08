@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:34 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:20:14 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:24:25 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,38 @@ void	safe_print(t_data *data, int id, char *msg)
 		pthread_mutex_unlock(&data->print_mutex);
 	}
 	pthread_mutex_unlock(&data->mutex_stop);
+}
+
+int	check_stop_status(t_data *input)
+{
+	pthread_mutex_lock(&input->mutex_stop);
+	if (input->stop)
+	{
+		pthread_mutex_unlock(&input->mutex_stop);
+		return (1);
+	}
+	pthread_mutex_unlock(&input->mutex_stop);
+	return (0);
+}
+
+long	get_time_since_meal(t_data *input, int i)
+{
+	long	since_meal;
+
+	pthread_mutex_lock(&input->philo[i].meal_mutex);
+	since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
+	pthread_mutex_unlock(&input->philo[i].meal_mutex);
+	return (since_meal);
+}
+
+int	handle_death(t_data *input, int i)
+{
+	pthread_mutex_lock(&input->mutex_stop);
+	if (!input->stop)
+	{
+		input->stop = 1;
+		safe_print(input, input->philo[i].id, "died");
+	}
+	pthread_mutex_unlock(&input->mutex_stop);
+	return (1);
 }
