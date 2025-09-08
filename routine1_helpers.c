@@ -108,26 +108,14 @@ int take_forks(t_philo *philo)
 
 void eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->mutex_stop);
+	pthread_mutex_lock(&philo->data->meal_mutex);
     philo->last_meal_eaten = get_absolute_time();
 	philo->meals_eaten++;
-    pthread_mutex_unlock(&philo->data->mutex_stop);
+    pthread_mutex_unlock(&philo->data->meal_mutex);
 
 	printf("%ld %d is eating\n", get_current_time(philo->data), philo->id);
     usleep(philo->data->time_to_eat * 1000);
 }
-
-// void eat(t_philo *philo)
-// {
-//     printf("%ld %d is eating\n", get_current_time(philo->data), philo->id);
-//     usleep(philo->data->time_to_eat * 1000);
-    
-//     // Update meal time AFTER eating finishes
-//     pthread_mutex_lock(&philo->data->mutex_stop);
-//     philo->last_meal_eaten = get_absolute_time();
-// 	philo->meals_eaten++;
-//     pthread_mutex_unlock(&philo->data->mutex_stop);
-// }
 
 void drop_forks(t_philo *philo)
 {
