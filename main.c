@@ -74,6 +74,7 @@ void create_philos(t_data *input)
 		input->philo[i].id = i + 1;
 		input->philo[i].left_fork = i;
 		input->philo[i].right_fork = i + 1;
+		input->philo[i].meals_eaten = 0;
 		input->philo[i].last_meal_eaten = input->start_time;
 		input->philo[i].data = input;
 		i++;
@@ -81,6 +82,7 @@ void create_philos(t_data *input)
 	input->philo[i].id = i + 1;
 	input->philo[i].left_fork = i;
 	input->philo[i].right_fork = 0;
+	input->philo[i].meals_eaten = 0;
 	input->philo[i].last_meal_eaten = input->start_time;
     input->philo[i].data = input;
 	return ;
