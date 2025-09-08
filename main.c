@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:08 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 21:34:03 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 23:19:29 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	main(int argc, char *argv[])
 	t_data		input;
 	pthread_t	monitor_thread;
 
-	input.start_time = get_absolute_time();
 	if (validate_args(argc, argv) != 0 || atol_args(&input, argc, argv) != 0)
 		return (1);
 	input.philo = malloc(sizeof(t_philo) * input.n_philo);
@@ -85,6 +84,7 @@ int	main(int argc, char *argv[])
 		return (one_philo(&input), del_meal_mut(&input), cleanup(&input), 0);
 	if (create_philos(&input) != 0)
 		return (cleanup(&input), 1);
+	input.start_time = get_absolute_time();
 	if (create_thread_philo(&input) != 0)
 		return (del_meal_mut(&input), cleanup(&input), 1);
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, &input) != 0)
