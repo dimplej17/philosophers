@@ -7,17 +7,35 @@ long get_current_time(t_data *data)
 	return (get_absolute_time() - data->start_time);
 }
 
+// int check_all_eaten_enough(t_data *input)
+// {
+//     int i = 0;
+    
+//     while (i < input->n_philo)
+//     {
+//         if (input->philo[i].meals_eaten < input->must_eat)
+//             return (0);  // At least one philosopher hasn't eaten enough
+//         i++;
+//     }
+//     return (1);  // All philosophers have eaten enough meals
+// }
+
 int check_all_eaten_enough(t_data *input)
 {
     int i = 0;
-    
+
     while (i < input->n_philo)
     {
-        if (input->philo[i].meals_eaten < input->must_eat)
-            return (0);  // At least one philosopher hasn't eaten enough
+        pthread_mutex_lock(&input->philos[i].meal_mutex);
+        if (input->philos[i].meals_eaten < input->must_eat)
+        {
+            pthread_mutex_unlock(&input->philos[i].meal_mutex);
+            return (0);
+        }
+        pthread_mutex_unlock(&input->philos[i].meal_mutex);
         i++;
     }
-    return (1);  // All philosophers have eaten enough meals
+    return (1);
 }
 
 void cleanup(t_data *data)
