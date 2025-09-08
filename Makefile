@@ -7,7 +7,7 @@ SRCS = main.c \
 	   helper3.c \
 	   routine_thread.c \
 	   monitor_routine.c \
-	   routine_actions.c.c \
+	   routine_actions.c \
 	   routine_forks.c
 
 OBJS = $(SRCS:%.c=%.o)
