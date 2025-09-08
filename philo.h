@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:30 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 22:29:15 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:53:13 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int					create_thread_philo(t_data *input);
 int					ft_philo_threads_join(t_data *input);
 void				safe_print(t_data *data, int id, char *msg);
 int					check_stop_status(t_data *input);
-long				get_time_since_meal(t_data *input, int i);
 int					handle_death(t_data *input, int i);
 
 // routine_thread

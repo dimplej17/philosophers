@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:40 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 22:35:28 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 23:03:56 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,26 @@ int	should_stop(t_philo *philo)
 	return (stop);
 }
 
+void	drop_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]);
+	pthread_mutex_unlock(&philo->data->mutex_fork[philo->right_fork]);
+}
+
 void	eat(t_philo *philo)
 {
+	if (should_stop(philo))
+	{
+		drop_forks(philo);
+		return ;
+	}
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal_eaten = get_absolute_time();
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->meal_mutex);
 	safe_print(philo->data, philo->id, "is eating");
 	smart_sleep(philo->data->time_to_eat, philo);
-	pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]);
-	pthread_mutex_unlock(&philo->data->mutex_fork[philo->right_fork]);
-}
-
-void	drop_forks(t_philo *philo)
-{
-	pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]);
-	pthread_mutex_unlock(&philo->data->mutex_fork[philo->right_fork]);
+	drop_forks(philo);
 }
 
 void	sleep_phase(t_philo *philo)

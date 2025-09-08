@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:34 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 22:36:20 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:53:09 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,6 @@ int	check_stop_status(t_data *input)
 	}
 	pthread_mutex_unlock(&input->mutex_stop);
 	return (0);
-}
-
-long	get_time_since_meal(t_data *input, int i)
-{
-	long	since_meal;
-
-	pthread_mutex_lock(&input->philo[i].meal_mutex);
-	since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
-	pthread_mutex_unlock(&input->philo[i].meal_mutex);
-	return (since_meal);
 }
 
 int	handle_death(t_data *input, int i)

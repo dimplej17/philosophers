@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:19 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 22:07:49 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:53:26 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ int	check_philosopher_death(t_data *input, int i)
 {
 	long	since_meal;
 
-	since_meal = get_time_since_meal(input, i);
+	pthread_mutex_lock(&input->philo[i].meal_mutex);
+	since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
+	pthread_mutex_unlock(&input->philo[i].meal_mutex);
 	if (since_meal >= input->time_to_die)
 		return (handle_death(input, i));
 	return (0);
