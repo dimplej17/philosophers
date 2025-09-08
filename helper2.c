@@ -7,19 +7,6 @@ long get_current_time(t_data *data)
 	return (get_absolute_time() - data->start_time);
 }
 
-// int check_all_eaten_enough(t_data *input)
-// {
-//     int i = 0;
-    
-//     while (i < input->n_philo)
-//     {
-//         if (input->philo[i].meals_eaten < input->must_eat)
-//             return (0);  // At least one philosopher hasn't eaten enough
-//         i++;
-//     }
-//     return (1);  // All philosophers have eaten enough meals
-// }
-
 int check_all_eaten_enough(t_data *input)
 {
     int i = 0;
@@ -45,6 +32,7 @@ void cleanup(t_data *data)
     while (i < data->n_philo)
         pthread_mutex_destroy(&data->mutex_fork[i++]);
     pthread_mutex_destroy(&data->mutex_stop);
+	pthread_mutex_destroy(&data->print_mutex);
     free(data->mutex_fork);
     free(data->philo);
 }
@@ -75,17 +63,3 @@ int create_thread_philo(t_data *input)
 	}
 	return (0);
 }
-
-int ft_philo_threads_join(t_data *input)
-	{
-		int i;
-		i = 0;
-		while (i < input->n_philo)
-	{
-		if (pthread_join(input->threads[i], NULL) != 0)
-			return (1);
-		i++;
-	}
-		return (0);
-	}
-	

@@ -33,6 +33,7 @@ typedef struct s_data
 	pthread_mutex_t *mutex_fork;
     int     stop; // flag: someone died or all ate enough
     pthread_mutex_t mutex_stop;
+    pthread_mutex_t print_mutex;
     t_philo *philo;
 }   t_data;
 
@@ -55,7 +56,10 @@ int check_all_eaten_enough(t_data *input);
 void cleanup(t_data *data);
 void destroy_meal_mutex(t_data *data);
 int create_thread_philo(t_data *input);
+
+// helper 3
 int ft_philo_threads_join(t_data *input);
+void safe_print(t_data *data, int id, char *msg);
 
 // routine1
 void one_philo(t_data *input);

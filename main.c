@@ -45,7 +45,9 @@ int init_mutexes(t_data *input)
 	{
 		int i;
 		if (pthread_mutex_init(&input->mutex_stop, NULL) != 0)
-		return (free(input->philo), 1);
+			return (free(input->philo), 1);
+		if (pthread_mutex_init(&input->print_mutex, NULL) != 0)
+			return (1);
 	input->mutex_fork = malloc(sizeof(pthread_mutex_t) * input->n_philo);
 	if (!input->mutex_fork)
 	{

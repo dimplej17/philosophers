@@ -4,7 +4,8 @@
 
 void *monitor_routine(void *data)
 {
-    t_data *input = (t_data *)data;
+    t_data *input;
+	input = (t_data *)data;
     int i;
     long since_meal;
     
@@ -18,14 +19,14 @@ void *monitor_routine(void *data)
                 pthread_mutex_unlock(&input->mutex_stop);
                 return (NULL);
             }
-        since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
         pthread_mutex_lock(&input->philo[i].meal_mutex);
 		since_meal = get_absolute_time() - input->philo[i].last_meal_eaten;
 		pthread_mutex_unlock(&input->philo[i].meal_mutex);
             if (since_meal >= input->time_to_die) {
     if (!input->stop) {
         input->stop = 1;
-        printf("%ld %d died\n", get_current_time(input), input->philo[i].id);
+        // printf("%ld %d died\n", get_current_time(input), input->philo[i].id); pineapple
+		safe_print(input, input->philo[i].id,"died");
     }
     pthread_mutex_unlock(&input->mutex_stop);
     return (NULL);

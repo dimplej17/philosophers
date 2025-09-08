@@ -35,7 +35,8 @@ int take_forks(t_philo *philo)
 		pthread_mutex_unlock(&philo->data->mutex_fork[first_fork]);
 		return (0);
 	}
-	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
+	// printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id); pineapple
+	safe_print(philo->data, philo->id,"has taken a fork");
 	if (should_stop(philo))
 	{
 		pthread_mutex_unlock(&philo->data->mutex_fork[first_fork]);
@@ -52,7 +53,8 @@ int take_forks(t_philo *philo)
 		pthread_mutex_unlock(&philo->data->mutex_fork[second_fork]);
 		return (0);
 	}
-	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
+	// printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id); pineapple
+	safe_print(philo->data, philo->id,"has taken a fork");
 	return (1);
 }
 
@@ -113,7 +115,8 @@ void eat(t_philo *philo)
 	philo->meals_eaten++;
     pthread_mutex_unlock(&philo->meal_mutex);
 
-	printf("%ld %d is eating\n", get_current_time(philo->data), philo->id);
+	// printf("%ld %d is eating\n", get_current_time(philo->data), philo->id); pineapple
+	safe_print(philo->data, philo->id, "is eating");
     usleep(philo->data->time_to_eat * 1000);
 }
 
@@ -128,7 +131,8 @@ void sleep_phase(t_philo *philo)
 	if (should_stop(philo))
 		return;
 		
-	printf("%ld %d is sleeping\n", get_current_time(philo->data), philo->id);
+	// printf("%ld %d is sleeping\n", get_current_time(philo->data), philo->id); pineapple
+	safe_print(philo->data, philo->id, "is sleeping");
 	usleep(philo->data->time_to_sleep * 1000);
 }
 

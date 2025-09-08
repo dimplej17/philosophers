@@ -3,6 +3,7 @@ NAME = philo
 SRCS = main.c \
 	   helper1.c \
 	   helper2.c \
+	   helper3.c \
 	   routine1.c \
 	   monitor_routine.c \
 	   routine1_helpers.c \

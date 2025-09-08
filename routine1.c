@@ -9,7 +9,8 @@ void *routine_one_philo(void *data)
 
 	if (pthread_mutex_lock(&philo->data->mutex_fork[philo->left_fork]) != 0)
 		return (NULL);
-	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
+	// printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
+	safe_print(philo->data, philo->id, "has taken a fork");
 
     while (1)
     {
@@ -17,7 +18,8 @@ void *routine_one_philo(void *data)
         {
 			if (pthread_mutex_unlock(&philo->data->mutex_fork[philo->left_fork]) != 0)
 				return (NULL);
-            printf("%ld %d died\n", get_current_time(philo->data), philo->id);
+            // printf("%ld %d died\n", get_current_time(philo->data), philo->id); pineapple
+			safe_print(philo->data, philo->id, "died");
             return (NULL);
         }
 		usleep(1000);
@@ -45,13 +47,15 @@ void think_phase(t_philo *philo)
 	if (should_stop(philo))
 		return;
 		
-	printf("%ld %d is thinking\n", get_current_time(philo->data), philo->id);
+	// printf("%ld %d is thinking\n", get_current_time(philo->data), philo->id); pineapple
+	safe_print(philo->data, philo->id, "is thinking");
 	usleep(1000);
 }
 
 void *routine(void *data)
 {
-	t_philo *philo = (t_philo *)data;
+	t_philo *philo;
+	philo = (t_philo *)data;
 	
 	// Stagger even-numbered philosophers to reduce initial contention
 	if (philo->id % 2 == 0)
