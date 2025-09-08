@@ -38,7 +38,7 @@ int atol_args(t_data *input, int argc, char *argv[])
     }
     else
     	input->must_eat = -1;
-	return (0);
+return (0);
 }
 
 int init_mutexes(t_data *input)
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 	create_philos(&input);
 	if (create_thread_philo(&input) != 0)
 		return (cleanup(&input), 1);
-		pthread_t monitor_thread;
+	pthread_t monitor_thread;
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, &input) != 0)
 		return (free(input.threads), cleanup(&input), 1);
 	if (pthread_join(monitor_thread, NULL) != 0)
