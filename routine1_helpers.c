@@ -108,10 +108,10 @@ int take_forks(t_philo *philo)
 
 void eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->meal_mutex);
+	pthread_mutex_lock(&philo->meal_mutex);
     philo->last_meal_eaten = get_absolute_time();
 	philo->meals_eaten++;
-    pthread_mutex_unlock(&philo->data->meal_mutex);
+    pthread_mutex_unlock(&philo->meal_mutex);
 
 	printf("%ld %d is eating\n", get_current_time(philo->data), philo->id);
     usleep(philo->data->time_to_eat * 1000);
