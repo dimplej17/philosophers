@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:40 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 18:00:41 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:17:43 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,56 +67,6 @@ int take_forks(t_philo *philo)
 	safe_print(philo->data, philo->id,"has taken a fork");
 	return (1);
 }
-
-// int take_forks(t_philo *philo)
-// {
-// 	int first_fork;
-// 	int second_fork;
-	
-// 	if (philo->left_fork < philo->right_fork)
-// 	{
-// 		first_fork = philo->left_fork;
-// 		second_fork = philo->right_fork;
-// 	}
-// 	else
-// 	{
-// 		first_fork = philo->right_fork;
-// 		second_fork = philo->left_fork;
-// 	}
-// 	if (pthread_mutex_lock(&philo->data->mutex_fork[first_fork]) != 0)
-// 		return (0);
-// 	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
-// 	if (should_stop(philo))
-// 	{
-// 		pthread_mutex_unlock(&philo->data->mutex_fork[first_fork]);
-// 		return (0);
-// 	}
-// 	if (pthread_mutex_lock(&philo->data->mutex_fork[second_fork]) != 0)
-// 	{
-// 		pthread_mutex_unlock(&philo->data->mutex_fork[first_fork]);
-// 		return (0);
-// 	}
-// 	printf("%ld %d has taken a fork\n", get_current_time(philo->data), philo->id);
-// 	return (1);
-// }
-
-// void eat(t_philo *philo)
-// {
-// 	if (should_stop(philo))
-// 		return;
-		
-// 	printf("%ld %d is eating\n", get_current_time(philo->data), philo->id);
-// 	usleep(philo->data->time_to_eat * 1000);
-	
-// 	// Update meal time AFTER eating finishes
-// 	pthread_mutex_lock(&philo->data->mutex_stop);
-// 	if (!philo->data->stop)  // Double-check inside mutex
-// 	{
-// 		philo->last_meal_eaten = get_absolute_time();
-// 		philo->meals_eaten++;
-// 	}
-// 	pthread_mutex_unlock(&philo->data->mutex_stop);
-// }
 
 void eat(t_philo *philo)
 {
