@@ -26,13 +26,13 @@ int check_all_eaten_enough(t_data *input)
 
     while (i < input->n_philo)
     {
-        pthread_mutex_lock(&input->philos[i].meal_mutex);
-        if (input->philos[i].meals_eaten < input->must_eat)
+        pthread_mutex_lock(&input->philo[i].meal_mutex);
+        if (input->philo[i].meals_eaten < input->must_eat)
         {
-            pthread_mutex_unlock(&input->philos[i].meal_mutex);
+            pthread_mutex_unlock(&input->philo[i].meal_mutex);
             return (0);
         }
-        pthread_mutex_unlock(&input->philos[i].meal_mutex);
+        pthread_mutex_unlock(&input->philo[i].meal_mutex);
         i++;
     }
     return (1);
