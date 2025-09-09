@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 21:39:30 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/09 02:30:25 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:10:29 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,6 @@ int	check_all_eaten_enough(t_data *input)
 	return (1);
 }
 
-// void	cleanup(t_data *data)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	pthread_mutex_destroy(&data->mutex_stop);
-// 	pthread_mutex_destroy(&data->print_mutex);
-// 	while (i < data->n_philo)
-// 		pthread_mutex_destroy(&data->mutex_fork[i++]);
-// 	free(data->mutex_fork);
-// 	free(data->philo);
-// }
-
-// Update cleanup
 void	cleanup(t_data *data)
 {
 	int	i;

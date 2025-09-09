@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:45 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/09 02:45:11 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:10:48 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,34 +68,3 @@ void	*routine(void *data)
 	}
 	return (NULL);
 }
-
-// void	*routine(void *data)
-// {
-// 	t_philo	*philo;
-
-// 	philo = (t_philo *)data;
-// 	mark_thread_ready(philo->data);
-// 	wait_all_ready(philo->data);
-// 	if (philo->id % 2 == 0)
-// 		smart_sleep(philo->data->time_to_eat / 2, philo);
-// 	while (!should_stop(philo))
-// 	{
-// 		if (should_stop(philo))
-// 			break ;
-// 		if (!take_forks(philo))
-// 			break ;
-// 		if (should_stop(philo))
-// 		{
-// 			drop_forks(philo);
-// 			break ;
-// 		}
-// 		eat(philo);
-// 		if (should_stop(philo))
-// 			break ;
-// 		sleep_phase(philo);
-// 		if (should_stop(philo))
-// 			break ;
-// 		think_phase(philo);
-// 	}
-// 	return (NULL);
-// }
