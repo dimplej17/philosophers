@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:19 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 22:53:26 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/09 02:41:07 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	*monitor_routine(void *data)
 	t_data	*input;
 
 	input = (t_data *)data;
+	wait_all_ready(input);
+	usleep(1000);
 	while (1)
 	{
 		if (monitor_all_philosophers(input))

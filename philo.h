@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:30 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 22:53:13 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/09 02:46:42 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,12 @@ typedef struct s_data
 	pthread_mutex_t	mutex_stop;
 	pthread_mutex_t	print_mutex;
 	t_philo			*philo;
+	pthread_mutex_t	ready_mutex;
+	int				threads_ready;
 }					t_data;
 
 // main
+int					init_ready_mutex(t_data *input);
 int					init_mutexes(t_data *input);
 int					create_philos(t_data *input);
 
@@ -76,10 +79,15 @@ void				safe_print(t_data *data, int id, char *msg);
 int					check_stop_status(t_data *input);
 int					handle_death(t_data *input, int i);
 
-// routine_thread
+// one philo case
 void				one_philo(t_data *input);
 void				*routine_one_philo(void *data);
-void				think_phase(t_philo *philo);
+
+// threads ready check
+void				wait_all_ready(t_data *data);
+void				mark_thread_ready(t_data *data);
+
+// routine_thread
 void				*routine(void *data);
 
 // monitor routine
@@ -93,6 +101,7 @@ int					should_stop(t_philo *philo);
 void				eat(t_philo *philo);
 void				drop_forks(t_philo *philo);
 void				sleep_phase(t_philo *philo);
+void				think_phase(t_philo *philo);
 
 // routine_forks
 int					take_forks(t_philo *philo);

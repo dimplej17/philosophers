@@ -6,17 +6,26 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 17:59:08 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 23:24:52 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/09 02:42:38 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	init_ready_mutex(t_data *input)
+{
+	input->threads_ready = 0;
+	if (pthread_mutex_init(&input->ready_mutex, NULL) != 0)
+		return (1);
+	return (0);
+}
+
 int	init_mutexes(t_data *input)
 {
 	int	i;
 
-	input->stop = 0;
+	if (init_ready_mutex(input) != 0)
+		return (free(input->philo), 1);
 	if (pthread_mutex_init(&input->mutex_stop, NULL) != 0)
 		return (free(input->philo), 1);
 	if (pthread_mutex_init(&input->print_mutex, NULL) != 0)
@@ -45,6 +54,7 @@ int	create_philos(t_data *input)
 	int	i;
 
 	i = 0;
+	input->start_time = get_absolute_time();
 	while (i < input->n_philo - 1)
 	{
 		input->philo[i].id = i + 1;
@@ -78,9 +88,9 @@ int	main(int argc, char *argv[])
 	input.philo = malloc(sizeof(t_philo) * input.n_philo);
 	if (!input.philo)
 		return (1);
+	input.stop = 0;
 	if (init_mutexes(&input) != 0)
 		return (1);
-	input.start_time = get_absolute_time();
 	if (input.n_philo == 1)
 		return (one_philo(&input), del_meal_mut(&input), cleanup(&input), 0);
 	if (create_philos(&input) != 0)

@@ -6,7 +6,7 @@
 /*   By: djanardh <djanardh@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 18:00:40 by djanardh          #+#    #+#             */
-/*   Updated: 2025/09/08 23:03:56 by djanardh         ###   ########.fr       */
+/*   Updated: 2025/09/09 02:45:59 by djanardh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,18 @@ void	sleep_phase(t_philo *philo)
 		return ;
 	safe_print(philo->data, philo->id, "is sleeping");
 	smart_sleep(philo->data->time_to_sleep, philo);
+}
+
+void	think_phase(t_philo *philo)
+{
+	long	think_time;
+
+	if (should_stop(philo))
+		return ;
+	safe_print(philo->data, philo->id, "is thinking");
+	think_time = (philo->data->time_to_die - philo->data->time_to_eat
+			- philo->data->time_to_sleep) * 0.8;
+	if (think_time < 1)
+		think_time = 1;
+	smart_sleep(think_time, philo);
 }

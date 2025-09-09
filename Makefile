@@ -8,7 +8,9 @@ SRCS = main.c \
 	   routine_thread.c \
 	   monitor_routine.c \
 	   routine_actions.c \
-	   routine_forks.c
+	   routine_forks.c \
+	   one_philo_case.c \
+	   threads_ready_check.c
 
 OBJS = $(SRCS:%.c=%.o)
 
